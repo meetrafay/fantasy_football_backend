@@ -42,26 +42,26 @@ class TransferPurchaseService:
         buyer_team = buyer.team
         seller_team = seller.team
 
-        # --- Move money ---
+        # Move money
         buyer_team.capital -= price
         seller_team.capital += price
 
         buyer_team.save()
         seller_team.save()
 
-        # --- Transfer ownership ---
+        # Transfer ownership
         player.team = buyer_team
         player.save()
 
-        # --- Deactivate listing ---
+        # Deactivate listing
         listing.is_active = False
         listing.save()
 
-        # --- Random value increase ---
+        # Random value increase
         player.value = TransferPurchaseService.increase_player_value(player.value)
         player.save()
 
-        # --- Create transaction record ---
+        # Create transaction record
         TransactionService.create_transaction(
             buyer=buyer,
             seller=seller,
@@ -70,7 +70,7 @@ class TransferPurchaseService:
         )
 
 
-        # --- Return final info ---
+        # Return final info
         return {
             "player_id": player.id,
             "player_name": player.name,
